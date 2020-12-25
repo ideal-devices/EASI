@@ -30,23 +30,26 @@ OPT = -Og
 #######################################
 # Build path
 BUILD_DIR = build
+SRC_DIR = src
+LIB_DIR = lib
+INC_DIR = inc
 
 ######################################
 # source
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/stm32l4xx_it.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_gpio.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_spi.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_pwr.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usart.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rcc.c \
-Core/Src/system_stm32l4xx.c  
+$(SRC_DIR)/main.c \
+$(SRC_DIR)/stm32l4xx_it.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_gpio.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_spi.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_pwr.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usart.c \
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rcc.c \
+$(SRC_DIR)/system_stm32l4xx.c  
 
 # ASM sources
 ASM_SOURCES =  \
@@ -116,11 +119,11 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
--ICore/Inc \
--IDrivers/STM32L4xx_HAL_Driver/Inc \
--IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
--IDrivers/CMSIS/Include \
--IDrivers/CMSIS/Include
+-I$(INC_DIR) \
+-I$(LIB_DIR)/STM32L4xx_HAL_Driver/Inc \
+-I$(LIB_DIR)/CMSIS/Device/ST/STM32L4xx/Include \
+-I$(LIB_DIR)/CMSIS/Include \
+-I$(LIB_DIR)/CMSIS/Include
 
 
 # compile gcc flags
