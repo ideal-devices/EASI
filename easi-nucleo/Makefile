@@ -40,7 +40,11 @@ INC_DIR = inc
 # C sources
 C_SOURCES =  \
 $(SRC_DIR)/main.c \
+$(SRC_DIR)/epd.c \
+$(SRC_DIR)/epdgl.c \
+$(SRC_DIR)/font.c \
 $(SRC_DIR)/stm32l4xx_it.c \
+$(SRC_DIR)/system_stm32l4xx.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_gpio.c \
@@ -48,8 +52,7 @@ $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_spi.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_pwr.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usart.c \
-$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rcc.c \
-$(SRC_DIR)/system_stm32l4xx.c  
+$(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rcc.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -122,7 +125,6 @@ C_INCLUDES =  \
 -I$(INC_DIR) \
 -I$(LIB_DIR)/STM32L4xx_HAL_Driver/Inc \
 -I$(LIB_DIR)/CMSIS/Device/ST/STM32L4xx/Include \
--I$(LIB_DIR)/CMSIS/Include \
 -I$(LIB_DIR)/CMSIS/Include
 
 
