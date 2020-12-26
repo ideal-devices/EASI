@@ -484,7 +484,7 @@ void writecmd (uint8_t cmd)
     // wait until SPI2 not busy/transmit FIFO empty
     while(LL_SPI_GetTxFIFOLevel(EPD_SPI) != LL_SPI_TX_FIFO_EMPTY);
     writepin(EPD_Port, EPD_DC_Pin, EPD_DC_CMD);
-    EPD_SPI->DR = cmd;  // data out
+    LL_SPI_TransmitData8(EPD_SPI, cmd);  // data out
     while(LL_SPI_GetTxFIFOLevel(EPD_SPI) != LL_SPI_TX_FIFO_EMPTY);
 }
 
@@ -494,7 +494,7 @@ void writedata (uint8_t data)
     // wait until transmit FIFO not full
     while(LL_SPI_GetTxFIFOLevel(EPD_SPI) == LL_SPI_TX_FIFO_FULL);
     writepin(EPD_Port, EPD_DC_Pin, EPD_DC_DATA);
-    EPD_SPI->DR = data;  // data out
+    LL_SPI_TransmitData8(EPD_SPI, data);  // data out
 }
 
 void select (void)
@@ -549,7 +549,6 @@ void epd_init(void)
         
     // begin startup sequence
     writecmd(POWER_SETTING);
-    writepin(GPIOA, LL_GPIO_PIN_5, HI);
     writedata(0x03);                  // VDS_EN, VDG_EN
     writedata(0x00);                  // VCOM_HV, VGHL_LV[1], VGHL_LV[0]
     writedata(0x2b);                  // VDH
