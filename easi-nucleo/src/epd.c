@@ -417,7 +417,7 @@ void reset (void)
 // pin definitions for STM32L4xx
 #define EPD_RST_Pin LL_GPIO_PIN_0
 #define EPD_BSY_Pin LL_GPIO_PIN_1
-#define EPD_DC_Pin LL_GPIO_PIN_2
+#define EPD_DC_Pin LL_GPIO_PIN_4
 #define EPD_DIN_Pin LL_GPIO_PIN_3
 #define EPD_Port GPIOC
 #define EPD_SPI SPI2
@@ -449,7 +449,7 @@ writepin(GPIO_TypeDef * port, uint32_t pin, uint32_t value)
 static inline uint32_t
 readpin(GPIO_TypeDef * port, uint32_t pin)
 {
-    return ((port->IDR) & pin);
+    return (((port->IDR) & pin) == pin);
 }
 
 /*
@@ -488,7 +488,6 @@ void writecmd (uint8_t cmd)
     while(LL_SPI_GetTxFIFOLevel(EPD_SPI) != LL_SPI_TX_FIFO_EMPTY);
 }
 
-
 void writedata (uint8_t data)
 {
     // wait until transmit FIFO not full
@@ -511,7 +510,7 @@ void deselect (void)
     // writepin(EPD_Port, EPD_CS_PIN, EPD_CS_HI);
 }
 
-inline bool
+bool
 epd_is_idle(void)
 {
     return (readpin(EPD_Port, EPD_BSY_Pin) == EPD_BSY_HI);
@@ -526,9 +525,12 @@ wait_until_idle (void)
 void reset (void)
 {
     writepin(EPD_Port, EPD_RST_Pin, EPD_RST_LO);
-    while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_LO);
+    delayms(1000);
+    // while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_LO);
+
     writepin(EPD_Port, EPD_RST_Pin, EPD_RST_HI);
-    while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_HI);
+    delayms(1000);
+    // while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_HI);
 }
 // STM32L4xx
 #endif
@@ -538,11 +540,6 @@ void epd_init(void)
     #ifdef TM4C123GHPM
     tm4cInit(); // initialize epd on port A with SSI0 in mode 0 at 8MHz
     #endif
-
-    writepin(GPIOA, LL_GPIO_PIN_5, HI);
-    delayms(1000);
-    writepin(GPIOA, LL_GPIO_PIN_5, LO);
-    delayms(1000);
 
     select();
     reset();
@@ -584,6 +581,9 @@ void epd_init(void)
 
     epd_set_lut_slow();
     epd_clear_frame();
+
+    wait_until_idle();  // comment out if debugging with logic analyzer
+    epd_refresh_slow();
 }
 
 void epd_reset(void)

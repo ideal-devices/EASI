@@ -58,6 +58,16 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+static inline void
+writepin(GPIO_TypeDef * port, uint32_t pin, uint32_t value)
+{
+    if (value) {
+        port->BSRR |= pin;
+    } else {
+        port->BRR |= pin;
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -99,6 +109,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   epd_init();
   epdgl_init();
+
+  epdgl_fill_circle(200, 150, 50, EPD_GREY);
+  epdgl_draw_circle(200, 150, 50, EPD_BLACK);
+
+  writepin(GPIOA, LL_GPIO_PIN_5, 1);
+  while(!epdgl_update_screen(EPD_SLOW));
+  writepin(GPIOA, LL_GPIO_PIN_5, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -205,10 +222,10 @@ static void MX_SPI2_Init(void)
   SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
   SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
   SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
-  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_HIGH;
-  SPI_InitStruct.ClockPhase = LL_SPI_PHASE_2EDGE;
+  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
+  SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
   SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
-  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV4;
+  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV8;
   SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
   SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
   SPI_InitStruct.CRCPoly = 7;
@@ -312,7 +329,7 @@ static void MX_GPIO_Init(void)
   /**/
   GPIO_InitStruct.Pin = EPD_RST_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(EPD_GPIO_Port, &GPIO_InitStruct);
@@ -320,6 +337,7 @@ static void MX_GPIO_Init(void)
   /**/
   GPIO_InitStruct.Pin = EPD_DC_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  // D/C pin switches at ~1/8th the rate of SPI Data
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
@@ -328,7 +346,7 @@ static void MX_GPIO_Init(void)
   /**/
   GPIO_InitStruct.Pin = EPD_BSY_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(EPD_GPIO_Port, &GPIO_InitStruct);
@@ -340,6 +358,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  // /**/
+  // GPIO_InitStruct.Pin = KBD_COL_Pins;
+  // GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  // GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  // GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  // GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  // LL_GPIO_Init(KBD_COL_Port, &GPIO_InitStruct);
+
+  // /**/
+  // GPIO_InitStruct.Pin = KBD_ROW_Pins;
+  // GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  // GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  // GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  // GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  // LL_GPIO_Init(KBD_ROW_Port, &GPIO_InitStruct);
 
 }
 

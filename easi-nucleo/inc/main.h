@@ -75,22 +75,41 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin LL_GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
+
 #define USART_TX_Pin LL_GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin LL_GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
+
 #define LD2_Pin LL_GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+
+/* SPI bus for display driver */
 #define EPD_RST_Pin LL_GPIO_PIN_0
 #define EPD_BSY_Pin LL_GPIO_PIN_1
-#define EPD_DC_Pin LL_GPIO_PIN_2
+#define EPD_DC_Pin LL_GPIO_PIN_4
 #define EPD_GPIO_Port GPIOC
+
+/* 6 pins for key matrix columns (write) */
+#define KBD_COL_Port GPIOA
+#define KBD_COL_Pins (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_4 | \
+                      LL_GPIO_PIN_6 | LL_GPIO_PIN_7 | LL_GPIO_PIN_8)
+
+/* 7 pins for key matrix rows (read) */
+#define KBD_ROW_Port GPIOB
+#define KBD_ROW_Pins (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | \
+                      LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | \
+                      LL_GPIO_PIN_7)
+
 #define TMS_Pin LL_GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
+
 #define TCK_Pin LL_GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+
 #define SWO_Pin LL_GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */
