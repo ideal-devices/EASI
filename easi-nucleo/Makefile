@@ -43,6 +43,7 @@ $(SRC_DIR)/main.c \
 $(SRC_DIR)/epd.c \
 $(SRC_DIR)/epdgl.c \
 $(SRC_DIR)/font.c \
+$(SRC_DIR)/util.c \
 $(SRC_DIR)/stm32l4xx_it.c \
 $(SRC_DIR)/system_stm32l4xx.c \
 $(LIB_DIR)/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c \

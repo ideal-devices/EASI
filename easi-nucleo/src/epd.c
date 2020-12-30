@@ -409,6 +409,7 @@ void reset (void)
 
 // TM4C123GHPM
 #elif defined STM32L4xx
+#include "util.h"
 #include "stm32l4xx.h"
 #include "stm32l476xx.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -430,39 +431,6 @@ void reset (void)
 #define EPD_RST_HI  HI
 #define EPD_BSY_LO  LO
 #define EPD_BSY_HI  HI
-
-#define ONE_MS (72724*2/91) // 1msec, tuned at 80 MHz
-
-/*
-    LL wrapper for accessing STM32L4xx pins
-*/
-static inline void
-writepin(GPIO_TypeDef * port, uint32_t pin, uint32_t value)
-{
-    if (value) {
-        port->BSRR |= pin;
-    } else {
-        port->BRR |= pin;
-    }
-}
-
-static inline uint32_t
-readpin(GPIO_TypeDef * port, uint32_t pin)
-{
-    return (((port->IDR) & pin) == pin);
-}
-
-/*
-    Wait n milliseconds
-*/
-void delayms (uint32_t n)
-{
-    uint32_t volatile time;
-    while(n--){
-        time = ONE_MS;
-        while(time--);
-    }
-}
 
 // The Data/Command pin must be valid when the eighth bit is
 // sent.  The SSI module has hardware input and output FIFOs
@@ -525,12 +493,12 @@ wait_until_idle (void)
 void reset (void)
 {
     writepin(EPD_Port, EPD_RST_Pin, EPD_RST_LO);
-    delayms(1000);
-    // while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_LO);
+    delayms(1);
+    while(readpin(EPD_Port, EPD_RST_Pin));
 
     writepin(EPD_Port, EPD_RST_Pin, EPD_RST_HI);
-    delayms(1000);
-    // while(readpin(EPD_Port, EPD_RST_Pin) != EPD_RST_HI);
+    delayms(1);
+    while(!readpin(EPD_Port, EPD_RST_Pin));
 }
 // STM32L4xx
 #endif
@@ -581,9 +549,6 @@ void epd_init(void)
 
     epd_set_lut_slow();
     epd_clear_frame();
-
-    wait_until_idle();  // comment out if debugging with logic analyzer
-    epd_refresh_slow();
 }
 
 void epd_reset(void)

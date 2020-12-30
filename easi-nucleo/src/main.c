@@ -22,8 +22,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <math.h>
+
 #include "epd.h"
 #include "epdgl.h"
+
+#include "util.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,17 +61,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-static inline void
-writepin(GPIO_TypeDef * port, uint32_t pin, uint32_t value)
-{
-    if (value) {
-        port->BSRR |= pin;
-    } else {
-        port->BRR |= pin;
-    }
-}
-
+text_config_t fnt = {&Consolas14, EPD_BLACK};
 /* USER CODE END 0 */
 
 /**
@@ -110,12 +104,18 @@ int main(void)
   epd_init();
   epdgl_init();
 
-  epdgl_fill_circle(200, 150, 50, EPD_GREY);
-  epdgl_draw_circle(200, 150, 50, EPD_BLACK);
+  double pi = 3.1415;
+  double pi2 = pi * pi;
 
   writepin(GPIOA, LL_GPIO_PIN_5, 1);
-  while(!epdgl_update_screen(EPD_SLOW));
-  writepin(GPIOA, LL_GPIO_PIN_5, 0);
+
+  if (readpin(LD2_GPIO_Port, LD2_Pin)) {
+    epdgl_draw_string("LD2 HI", &fnt);
+    epdgl_draw_int((int)sqrt(pi2), &fnt);
+  } else {
+    epdgl_draw_string("LD2 LO", &fnt);
+  }
+  while(!epdgl_update_screen(EPD_FAST));
   /* USER CODE END 2 */
 
   /* Infinite loop */
