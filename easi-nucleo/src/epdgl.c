@@ -457,8 +457,20 @@ epdgl_draw_int(int32_t i, text_config_t * cfg)
 void
 epdgl_draw_string(const char * s, text_config_t * cfg)
 {
+    int32_t x_save = CURSOR_X;
     while (*s != 0) {
-        epdgl_draw_char(*s, cfg);
+        switch(*s) {
+        case '\n':
+            CURSOR_X = x_save;
+            CURSOR_Y += ((cfg->font->GlyphHeight * 17) >> 4);
+            break;
+        case '\t':
+            CURSOR_X += (4 * cfg->font->FixedWidth);
+            break;
+        default:
+            epdgl_draw_char(*s, cfg);
+            break;
+        }
         ++s;
     }
 }

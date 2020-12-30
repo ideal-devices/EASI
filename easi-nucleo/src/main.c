@@ -110,7 +110,7 @@ int main(void)
   writepin(GPIOA, LL_GPIO_PIN_5, 1);
 
   if (readpin(LD2_GPIO_Port, LD2_Pin)) {
-    epdgl_draw_string("LD2 HI", &fnt);
+    epdgl_draw_string("LD2 HI\nnewline\t", &fnt);
     epdgl_draw_int((int)sqrt(pi2), &fnt);
   } else {
     epdgl_draw_string("LD2 LO", &fnt);
